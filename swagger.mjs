@@ -21,7 +21,7 @@ const swaggerDefinition = {
       description: 'Servidor de Desarrollo'
     },
     {
-      url: 'https://tu-api.render.com',
+      url: 'https://taller-api-rest-mom1.onrender.com',
       description: 'Servidor en la Nube (Render)'
     }
   ],
