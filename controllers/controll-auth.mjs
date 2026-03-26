@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Credenciales leídas desde .env — nunca hardcodeadas en el código
 const getUsuarios = () => [
   {
     id: 1,
@@ -36,7 +35,7 @@ export const login = (req, res) => {
       sub: usuario.id,
       username: usuario.username,
       role: usuario.role,
-      exp: Math.floor(Date.now() / 1000) + (60 * 60) // 1 hora
+      exp: Math.floor(Date.now() / 1000) + (60 * 60)
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET);

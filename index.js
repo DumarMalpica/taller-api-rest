@@ -22,8 +22,8 @@ app.use(express.json());
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Rutas
-app.use('/api/auth',      routesAuth);
-app.use('/api/empresas',  routesEmpresa);
+app.use('/api/auth', routesAuth);
+app.use('/api/empresas', routesEmpresa);
 app.use('/api/empleados', routesEmpleados);
 
 // Health check
@@ -31,6 +31,6 @@ app.get('/ping', (req, res) => res.json({ state: true, msg: 'pong' }));
 
 // Inicio del servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`📄 Swagger UI disponible en http://localhost:${PORT}/api/docs`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Swagger UI disponible en http://localhost:${PORT}/api/docs`);
 });

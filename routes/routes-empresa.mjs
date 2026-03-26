@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as ctrl from '../controllers/controll-empresa.mjs';
 import { verifyToken } from '../middlewares/auth.mjs';
+import { soloAdmin } from '../middlewares/roles.mjs';
 
 const router = Router();
 
@@ -133,7 +134,7 @@ router.get('/:id', verifyToken, ctrl.getById);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/', verifyToken, ctrl.save);
+router.post('/', verifyToken, soloAdmin, ctrl.save);
 
 /**
  * @swagger
@@ -181,7 +182,7 @@ router.post('/', verifyToken, ctrl.save);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.put('/:id', verifyToken, ctrl.update);
+router.put('/:id', verifyToken, soloAdmin, ctrl.update);
 
 /**
  * @swagger
@@ -225,6 +226,6 @@ router.put('/:id', verifyToken, ctrl.update);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.delete('/:id', verifyToken, ctrl.remove);
+router.delete('/:id', verifyToken, soloAdmin, ctrl.remove);
 
 export default router;

@@ -1,7 +1,7 @@
 import { Empleado } from '../models/empleados.mjs';
 import { Empresa } from '../models/empresa.mjs';
 
-// Resuelve id numérico de empresa → ObjectId de MongoDB
+
 const resolverEmpresa = async (empresaInput) => {
   const empresa = await Empresa.findOne({ id: Number(empresaInput) });
   if (!empresa) {
@@ -36,7 +36,7 @@ export const save = async (req, res) => {
   try {
     const body = { ...req.body };
 
-    // Empresa es obligatoria — no se puede crear un empleado sin empresa
+
     if (!body.empresa) {
       return res.status(400).json({
         state: false,
@@ -44,7 +44,7 @@ export const save = async (req, res) => {
       });
     }
 
-    // Convierte el id numérico al ObjectId real de MongoDB
+
     body.empresa = await resolverEmpresa(body.empresa);
 
     const empleado = new Empleado(body);
@@ -60,7 +60,6 @@ export const update = async (req, res) => {
   try {
     const body = { ...req.body };
 
-    // Si se actualiza empresa, verificar que exista
     if (body.empresa !== undefined) {
       if (!body.empresa) {
         return res.status(400).json({
