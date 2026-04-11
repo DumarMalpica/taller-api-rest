@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import { dbConnection } from './drivers/connect-db.mjs';
 import { swaggerSpec } from './swagger.mjs';
@@ -10,6 +11,7 @@ import routesEmpleados from './routes/routes-empleados.mjs';
 dotenv.config();
 
 const app = express();
+app.use(cors());
 const PORT = process.env.PORT || 3000;
 
 // Conexión a MongoDB Atlas
