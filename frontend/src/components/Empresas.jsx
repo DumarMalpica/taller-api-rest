@@ -3,7 +3,13 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { Plus, Edit2, Trash2, Building } from 'lucide-react';
 
-const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/empresas`;
+const getBaseUrl = () => {
+    const isProd = window.location.hostname.includes('vercel.app');
+    const RENDER_URL = 'https://taller-api-rest-mom1.onrender.com';
+    return isProd ? RENDER_URL : (import.meta.env.VITE_API_URL || 'http://localhost:3000');
+};
+
+const API_URL = `${getBaseUrl()}/api/empresas`;
 
 export default function Empresas() {
     const { token, user } = useAuth();

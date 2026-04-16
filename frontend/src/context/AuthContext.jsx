@@ -34,7 +34,11 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            // Intelligent URL detection
+            const isProd = window.location.hostname.includes('vercel.app');
+            const RENDER_URL = 'https://taller-api-rest-mom1.onrender.com';
+            const API_URL = isProd ? RENDER_URL : (import.meta.env.VITE_API_URL || 'http://localhost:3000');
+            
             const response = await fetch(`${API_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
