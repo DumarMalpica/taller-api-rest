@@ -40,7 +40,7 @@ export default function Dashboard() {
 
         <nav style={{ flex: 1, padding: '1.5rem 1rem' }}>
           <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--clr-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem', paddingLeft: '0.5rem' }}>
-            Menu
+            Menú
           </p>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {navItems.map((item) => {
@@ -81,7 +81,7 @@ export default function Dashboard() {
             onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
           >
             <LogOut size={18} />
-            Logout
+            Cerrar Sesión
           </button>
         </div>
       </aside>
@@ -89,12 +89,12 @@ export default function Dashboard() {
       {/* Main Content Area */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--clr-bg-base)', overflowY: 'auto' }}>
         <header style={{ padding: '1.5rem 3rem', borderBottom: '1px solid var(--clr-bg-elevated)' }}>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>System Overview</h1>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Resumen del Sistema</h1>
         </header>
         <div style={{ padding: '2rem 3rem', flex: 1 }}>
           <div className="glass-panel animate-enter" style={{ minHeight: '100%' }}>
             <Routes>
-              <Route path="/" element={<div style={{ textAlign: 'center', padding: '4rem', color: 'var(--clr-text-muted)' }}><LayoutDashboard size={48} style={{ opacity: 0.2, marginBottom: '1rem' }} /><h2>Welcome to your Dashboard</h2><p>Select an option from the menu to get started.</p></div>} />
+              <Route path="/" element={<div style={{ textAlign: 'center', padding: '4rem', color: 'var(--clr-text-muted)' }}><LayoutDashboard size={48} style={{ opacity: 0.2, marginBottom: '1rem' }} /><h2>Bienvenido a tu Panel de Control</h2><p>Selecciona una opción del menú para comenzar.</p></div>} />
               <Route path="/empresas" element={<Empresas />} />
               <Route path="/empleados" element={<Empleados />} />
             </Routes>

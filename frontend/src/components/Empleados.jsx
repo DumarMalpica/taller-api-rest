@@ -37,7 +37,7 @@ export default function Empleados() {
             setEmpleados(res.data?.data || []);
             setLoading(false);
         } catch (err) {
-            setError(err.response?.data?.msg || 'Error fetching data');
+            setError(err.response?.data?.msg || 'Error al obtener datos');
             setLoading(false);
         }
     };
@@ -47,7 +47,7 @@ export default function Empleados() {
             const res = await axios.get(API_URL_EMPRESAS, { headers: { Authorization: `Bearer ${token}` } });
             setEmpresas(res.data?.data || []);
         } catch (err) {
-            console.error("Error fetching empresas", err);
+            console.error("Error al obtener empresas", err);
         }
     };
 
@@ -66,17 +66,17 @@ export default function Empleados() {
             setEditingId(null);
             fetchEmpleados();
         } catch (err) {
-            alert(err.response?.data?.msg || 'Error saving data');
+            alert(err.response?.data?.msg || 'Error al guardar datos');
         }
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this empleado?')) return;
+        if (!window.confirm('¿Estás seguro de que deseas eliminar este empleado?')) return;
         try {
             await axios.delete(`${API_URL}/${id}`, { headers: { Authorization: `Bearer ${token}` } });
             fetchEmpleados();
         } catch (err) {
-            alert(err.response?.data?.msg || 'Error deleting data');
+            alert(err.response?.data?.msg || 'Error al eliminar datos');
         }
     };
 

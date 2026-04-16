@@ -76,14 +76,14 @@ export default function Login() {
             </div>
           </div>
           <h2 style={{ marginBottom: '0.5rem' }}>
-            {step === 1 && 'Welcome Back'}
-            {step === 2 && 'Token Generated'}
-            {step === 3 && 'Verification'}
+            {step === 1 && 'Bienvenido'}
+            {step === 2 && 'Token Generado'}
+            {step === 3 && 'Verificación'}
           </h2>
           <p style={{ color: 'var(--clr-text-muted)', fontSize: '0.9rem' }}>
-            {step === 1 && 'Sign in to obtain your access token'}
-            {step === 2 && 'Copy this JWT token to continue'}
-            {step === 3 && 'Paste your token to enter the dashboard'}
+            {step === 1 && 'Inicia sesión para obtener tu token'}
+            {step === 2 && 'Copia este token JWT para continuar'}
+            {step === 3 && 'Pega tu token para entrar al panel'}
           </p>
         </div>
 
@@ -102,7 +102,7 @@ export default function Login() {
                 <User size={18} />
               </span>
               <input 
-                type="text" className="input-field" placeholder="Username" 
+                type="text" className="input-field" placeholder="Usuario" 
                 style={{ paddingLeft: '2.5rem', marginBottom: 0 }}
                 value={username} onChange={(e) => setUsername(e.target.value)} required
               />
@@ -113,14 +113,14 @@ export default function Login() {
                 <Lock size={18} />
               </span>
               <input 
-                type="password" className="input-field" placeholder="Password" 
+                type="password" className="input-field" placeholder="Contraseña" 
                 style={{ paddingLeft: '2.5rem', marginBottom: 0 }}
                 value={password} onChange={(e) => setPassword(e.target.value)} required
               />
             </div>
 
             <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={isLoading}>
-              {isLoading ? 'Authenticating...' : 'Obtain Token'}
+              {isLoading ? 'Autenticando...' : 'Obtener Token'}
             </button>
           </form>
         )}
@@ -137,15 +137,15 @@ export default function Login() {
             
             <div style={{ display: 'flex', gap: '1rem' }}>
               <button onClick={copyToClipboard} className="btn" style={{ flex: 1, background: isCopied ? 'var(--clr-success)' : 'var(--clr-bg-elevated)' }}>
-                {isCopied ? 'Copied!' : <><Clipboard size={18} /> Copy</>}
+                {isCopied ? '¡Copiado!' : <><Clipboard size={18} /> Copiar</>}
               </button>
               <button onClick={() => setStep(3)} className="btn btn-primary" style={{ flex: 1.2 }}>
-                Continue <ArrowRight size={18} />
+                Continuar <ArrowRight size={18} />
               </button>
             </div>
             
             <button onClick={resetForm} className="btn" style={{ width: '100%', marginTop: '1rem', background: 'transparent', color: 'var(--clr-text-muted)', fontSize: '0.8rem' }}>
-              <Undo2 size={14} /> Back to Sign In
+              <Undo2 size={14} /> Volver a Inicio de Sesión
             </button>
           </div>
         )}
@@ -155,7 +155,7 @@ export default function Login() {
           <form onSubmit={handleManualAuth} className="animate-enter">
             <textarea 
               className="input-field" 
-              placeholder="Paste your token here..." 
+              placeholder="Pega tu token aquí..." 
               rows={5}
               style={{ fontFamily: 'monospace', fontSize: '0.8rem', resize: 'none', marginBottom: '1.5rem' }}
               value={pastedToken}
@@ -164,11 +164,11 @@ export default function Login() {
             />
             
             <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-              Validate & Access Dashboard
+              Validar y Acceder al Panel
             </button>
 
             <button type="button" onClick={() => setStep(2)} className="btn" style={{ width: '100%', marginTop: '1rem', background: 'transparent', color: 'var(--clr-text-muted)', fontSize: '0.8rem' }}>
-               <Undo2 size={14} /> See token again
+               <Undo2 size={14} /> Volver a ver el Token
             </button>
           </form>
         )}
@@ -176,10 +176,10 @@ export default function Login() {
         {/* Demo Footer (only step 1) */}
         {step === 1 && (
           <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--clr-bg-elevated)' }}>
-            <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', textAlign: 'center', marginBottom: '1rem' }}>Or use demo credentials</p>
+            <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', textAlign: 'center', marginBottom: '1rem' }}>O usar credenciales de prueba</p>
             <div style={{ display: 'flex', gap: '1rem' }}>
-              <button type="button" onClick={() => handleDemoFill('admin')} className="btn" style={{ flex: 1, background: 'var(--clr-bg-elevated)', color: 'var(--clr-text-main)', fontSize: '0.8rem', padding: '0.5rem' }}>Admin Demo</button>
-              <button type="button" onClick={() => handleDemoFill('user')} className="btn" style={{ flex: 1, background: 'var(--clr-bg-elevated)', color: 'var(--clr-text-main)', fontSize: '0.8rem', padding: '0.5rem' }}>User Demo</button>
+              <button type="button" onClick={() => handleDemoFill('admin')} className="btn" style={{ flex: 1, background: 'var(--clr-bg-elevated)', color: 'var(--clr-text-main)', fontSize: '0.8rem', padding: '0.5rem' }}>Demo Admin</button>
+              <button type="button" onClick={() => handleDemoFill('user')} className="btn" style={{ flex: 1, background: 'var(--clr-bg-elevated)', color: 'var(--clr-text-main)', fontSize: '0.8rem', padding: '0.5rem' }}>Demo Usuario</button>
             </div>
           </div>
         )}

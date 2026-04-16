@@ -32,7 +32,7 @@ export default function Empresas() {
             setEmpresas(res.data?.data || []);
             setLoading(false);
         } catch (err) {
-            setError(err.response?.data?.msg || 'Error fetching data');
+            setError(err.response?.data?.msg || 'Error al obtener datos');
             setLoading(false);
         }
     };
@@ -52,17 +52,17 @@ export default function Empresas() {
             setEditingId(null);
             fetchEmpresas();
         } catch (err) {
-            alert(err.response?.data?.msg || 'Error saving data');
+            alert(err.response?.data?.msg || 'Error al guardar datos');
         }
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this empresa?')) return;
+        if (!window.confirm('¿Estás seguro de que deseas eliminar esta empresa?')) return;
         try {
             await axios.delete(`${API_URL}/${id}`, { headers: { Authorization: `Bearer ${token}` } });
             fetchEmpresas();
         } catch (err) {
-            alert(err.response?.data?.msg || 'Error deleting data');
+            alert(err.response?.data?.msg || 'Error al eliminar datos');
         }
     };
 

@@ -50,13 +50,13 @@ export const AuthProvider = ({ children }) => {
                 // We no longer set the token here, just return it
                 return { success: true, token: data.token };
             } else {
-                return { success: false, message: data.msg || 'Login failed' };
+                return { success: false, message: data.msg || 'Fallo al iniciar sesión' };
             }
         } catch (error) {
             console.error("Login connection error:", error);
             return { 
                 success: false, 
-                message: 'Server is starting up (hibernation). Please wait 30 seconds and try again.' 
+                message: 'El servidor está iniciando (estado de hibernación). Por favor espera 30 segundos y vuelve a intentar.' 
             };
         }
     };
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
             setToken(manualToken); // This triggers the useEffect to save and set user
             return { success: true };
         } catch (err) {
-            return { success: false, message: 'Invalid JWT Token format' };
+            return { success: false, message: 'Formato de Token JWT inválido' };
         }
     }
 
