@@ -1,24 +1,48 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, User, Lock, AlertCircle } from 'lucide-react';
+import { LogIn, User, Lock, AlertCircle, Clipboard, ArrowRight, Key, ShieldCheck, Undo2 } from 'lucide-react';
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, setManualToken } = useAuth();
+  
+  // States
+  const [step, setStep] = useState(1); // 1: Credentials, 2: Display Token, 3: Manual Input
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [generatedToken, setGeneratedToken] = useState('');
+  const [pastedToken, setPastedToken] = useState('');
+  
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleCredentialsSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    const { success, message } = await login(username, password);
-    if (!success) {
+    const { success, token, message } = await login(username, password);
+    if (success) {
+      setGeneratedToken(token);
+      setStep(2);
+    } else {
       setError(message);
     }
     setIsLoading(false);
+  };
+
+  const handleManualAuth = (e) => {
+    e.preventDefault();
+    const { success, message } = setManualToken(pastedToken);
+    if (!success) {
+      setError(message);
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(generatedToken);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   const handleDemoFill = (type) => {
@@ -31,17 +55,36 @@ export default function Login() {
     }
   };
 
+  const resetForm = () => {
+    setStep(1);
+    setError(null);
+    setGeneratedToken('');
+    setPastedToken('');
+  };
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', width: '100%', padding: '20px' }}>
       <div className="glass-panel animate-enter" style={{ width: '100%', maxWidth: '400px' }}>
+        
+        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
             <div style={{ padding: '1rem', background: 'var(--clr-primary)', borderRadius: '50%', display: 'inline-flex', boxShadow: '0 0 20px rgba(59, 130, 246, 0.4)' }}>
-              <LogIn color="white" size={32} />
+              {step === 1 && <LogIn color="white" size={32} />}
+              {step === 2 && <Key color="white" size={32} />}
+              {step === 3 && <ShieldCheck color="white" size={32} />}
             </div>
           </div>
-          <h2 style={{ marginBottom: '0.5rem' }}>Welcome Back</h2>
-          <p style={{ color: 'var(--clr-text-muted)' }}>Sign in to manage your system</p>
+          <h2 style={{ marginBottom: '0.5rem' }}>
+            {step === 1 && 'Welcome Back'}
+            {step === 2 && 'Token Generated'}
+            {step === 3 && 'Verification'}
+          </h2>
+          <p style={{ color: 'var(--clr-text-muted)', fontSize: '0.9rem' }}>
+            {step === 1 && 'Sign in to obtain your access token'}
+            {step === 2 && 'Copy this JWT token to continue'}
+            {step === 3 && 'Paste your token to enter the dashboard'}
+          </p>
         </div>
 
         {error && (
@@ -51,49 +94,95 @@ export default function Login() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ position: 'relative', marginBottom: '1rem' }}>
-            <span style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--clr-text-muted)' }}>
-              <User size={18} />
-            </span>
-            <input 
-              type="text" 
+        {/* Step 1: Credentials */}
+        {step === 1 && (
+          <form onSubmit={handleCredentialsSubmit}>
+            <div style={{ position: 'relative', marginBottom: '1rem' }}>
+              <span style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--clr-text-muted)' }}>
+                <User size={18} />
+              </span>
+              <input 
+                type="text" className="input-field" placeholder="Username" 
+                style={{ paddingLeft: '2.5rem', marginBottom: 0 }}
+                value={username} onChange={(e) => setUsername(e.target.value)} required
+              />
+            </div>
+
+            <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
+              <span style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--clr-text-muted)' }}>
+                <Lock size={18} />
+              </span>
+              <input 
+                type="password" className="input-field" placeholder="Password" 
+                style={{ paddingLeft: '2.5rem', marginBottom: 0 }}
+                value={password} onChange={(e) => setPassword(e.target.value)} required
+              />
+            </div>
+
+            <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={isLoading}>
+              {isLoading ? 'Authenticating...' : 'Obtain Token'}
+            </button>
+          </form>
+        )}
+
+        {/* Step 2: Show Token */}
+        {step === 2 && (
+          <div className="animate-enter">
+            <div style={{ background: 'var(--clr-bg-base)', padding: '1rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--clr-bg-elevated)', marginBottom: '1.5rem' }}>
+              <p style={{ fontSize: '0.7rem', color: 'var(--clr-text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>JSON Web Token (JWT)</p>
+              <div style={{ maxHeight: '120px', overflowY: 'auto', fontSize: '0.75rem', fontFamily: 'monospace', wordBreak: 'break-all', color: 'var(--clr-primary)', lineHeight: 1.4 }}>
+                {generatedToken}
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button onClick={copyToClipboard} className="btn" style={{ flex: 1, background: isCopied ? 'var(--clr-success)' : 'var(--clr-bg-elevated)' }}>
+                {isCopied ? 'Copied!' : <><Clipboard size={18} /> Copy</>}
+              </button>
+              <button onClick={() => setStep(3)} className="btn btn-primary" style={{ flex: 1.2 }}>
+                Continue <ArrowRight size={18} />
+              </button>
+            </div>
+            
+            <button onClick={resetForm} className="btn" style={{ width: '100%', marginTop: '1rem', background: 'transparent', color: 'var(--clr-text-muted)', fontSize: '0.8rem' }}>
+              <Undo2 size={14} /> Back to Sign In
+            </button>
+          </div>
+        )}
+
+        {/* Step 3: Paste Token */}
+        {step === 3 && (
+          <form onSubmit={handleManualAuth} className="animate-enter">
+            <textarea 
               className="input-field" 
-              placeholder="Username" 
-              style={{ paddingLeft: '2.5rem', marginBottom: 0 }}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Paste your token here..." 
+              rows={5}
+              style={{ fontFamily: 'monospace', fontSize: '0.8rem', resize: 'none', marginBottom: '1.5rem' }}
+              value={pastedToken}
+              onChange={(e) => setPastedToken(e.target.value)}
               required
             />
-          </div>
+            
+            <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+              Validate & Access Dashboard
+            </button>
 
-          <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
-            <span style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--clr-text-muted)' }}>
-              <Lock size={18} />
-            </span>
-            <input 
-              type="password" 
-              className="input-field" 
-              placeholder="Password" 
-              style={{ paddingLeft: '2.5rem', marginBottom: 0 }}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+            <button type="button" onClick={() => setStep(2)} className="btn" style={{ width: '100%', marginTop: '1rem', background: 'transparent', color: 'var(--clr-text-muted)', fontSize: '0.8rem' }}>
+               <Undo2 size={14} /> See token again
+            </button>
+          </form>
+        )}
 
-          <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={isLoading}>
-            {isLoading ? 'Authenticating...' : 'Sign In'}
-          </button>
-        </form>
-
-        <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--clr-bg-elevated)' }}>
-          <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', textAlign: 'center', marginBottom: '1rem' }}>Or use demo credentials</p>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <button type="button" onClick={() => handleDemoFill('admin')} className="btn" style={{ flex: 1, background: 'var(--clr-bg-elevated)', color: 'var(--clr-text-main)', fontSize: '0.8rem', padding: '0.5rem' }}>Admin Demo</button>
-            <button type="button" onClick={() => handleDemoFill('user')} className="btn" style={{ flex: 1, background: 'var(--clr-bg-elevated)', color: 'var(--clr-text-main)', fontSize: '0.8rem', padding: '0.5rem' }}>User Demo</button>
+        {/* Demo Footer (only step 1) */}
+        {step === 1 && (
+          <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--clr-bg-elevated)' }}>
+            <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', textAlign: 'center', marginBottom: '1rem' }}>Or use demo credentials</p>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button type="button" onClick={() => handleDemoFill('admin')} className="btn" style={{ flex: 1, background: 'var(--clr-bg-elevated)', color: 'var(--clr-text-main)', fontSize: '0.8rem', padding: '0.5rem' }}>Admin Demo</button>
+              <button type="button" onClick={() => handleDemoFill('user')} className="btn" style={{ flex: 1, background: 'var(--clr-bg-elevated)', color: 'var(--clr-text-main)', fontSize: '0.8rem', padding: '0.5rem' }}>User Demo</button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

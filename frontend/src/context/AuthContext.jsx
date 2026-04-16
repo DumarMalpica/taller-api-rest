@@ -47,14 +47,13 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
             
             if (response.ok && data.state) {
-                setToken(data.token);
-                return { success: true };
+                // We no longer set the token here, just return it
+                return { success: true, token: data.token };
             } else {
                 return { success: false, message: data.msg || 'Login failed' };
             }
         } catch (error) {
             console.error("Login connection error:", error);
-            // Handling Render Free Tier hibernation
             return { 
                 success: false, 
                 message: 'Server is starting up (hibernation). Please wait 30 seconds and try again.' 
@@ -62,12 +61,22 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const setManualToken = (manualToken) => {
+        try {
+            const decoded = jwtDecode(manualToken);
+            setToken(manualToken); // This triggers the useEffect to save and set user
+            return { success: true };
+        } catch (err) {
+            return { success: false, message: 'Invalid JWT Token format' };
+        }
+    }
+
     const logout = () => {
         setToken(null);
     };
 
     return (
-        <AuthContext.Provider value={{ token, user, login, logout }}>
+        <AuthContext.Provider value={{ token, user, login, logout, setManualToken }}>
             {children}
         </AuthContext.Provider>
     );
