@@ -34,7 +34,8 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await fetch('http://localhost:3000/api/auth/login', {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const response = await fetch(`${API_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -48,7 +49,12 @@ export const AuthProvider = ({ children }) => {
                 return { success: false, message: data.msg || 'Login failed' };
             }
         } catch (error) {
-            return { success: false, message: 'Server connection failed' };
+            console.error("Login connection error:", error);
+            // Handling Render Free Tier hibernation
+            return { 
+                success: false, 
+                message: 'Server is starting up (hibernation). Please wait 30 seconds and try again.' 
+            };
         }
     };
 
